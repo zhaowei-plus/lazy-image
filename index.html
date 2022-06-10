@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Lazy Image</title>
+    <link rel="import" href="./components/Table/index.html"/>
+    <style>
+      img {
+        width: 800px;
+        height: 500px;
+        margin: 0 auto;
+        display: block;
+        background-image: url(./images/loading.gif);
+        background-repeat: no-repeat;
+        background-position: center;
+        border-color: transparent;
+      }
+    </style>
+    <script src="./components/LazyImg.js"></script>
+</head>
+
+<body>
+  <img data-src="images/1.webp">
+  <img data-src="images/2.webp">
+  <img data-src="images/3.webp">
+  <img data-src="images/4.webp">
+  <img data-src="images/5.webp">
+  <img data-src="images/6.webp">
+  <img data-src="images/7.webp">
+  <img data-src="images/8.webp">
+  <img data-src="images/9.webp">
+  <img data-src="images/10.webp">
+
+  
+  <lazy-img width="800" height="500" src="images/1.webp"/>
+
+  <script>
+    const observer = new IntersectionObserver((entries) => {
+      // 当被监听的元素进入和移除可视区域时，都会触发一次
+      console.log('entries:', entries)
+
+      for (const entry of entries) {
+        if (entry.isIntersecting) {
+          // 表示进入可视区域
+          const { target: image } = entry
+          setTimeout(() => {
+            image.setAttribute('src', image.getAttribute('data-src'))
+          }, 1500)
+          
+          // 取消观察
+          observer.unobserve(image)
+        }
+      }
+    })
+
+    // 绑定观察器
+    const images = document.getElementsByTagName('img')
+    for (const image of images) {
+      observer.observe(image)
+    }
+  </script>
+</body>
+
+</html>
